@@ -1,0 +1,189 @@
+basePath: /api/v1
+definitions:
+  main.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  main.User:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      id:
+        type: string
+      name:
+        example: 정선우
+        type: string
+    type: object
+  main.UserRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      name:
+        example: 정선우
+        type: string
+    required:
+    - email
+    - name
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Gin + PostgreSQL 기반 User CRUD 예제. 모든 응답에 X-Response-Time-Ms 헤더로 처리
+    시간(ms)이 포함됩니다.
+  title: User CRUD API
+  version: "1.0"
+paths:
+  /users:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Response-Time-Ms:
+              description: 처리 시간(ms)
+              type: string
+          schema:
+            items:
+              $ref: '#/definitions/main.User'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: 유저 목록
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 유저 정보
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/main.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          headers:
+            X-Response-Time-Ms:
+              description: 처리 시간(ms)
+              type: string
+          schema:
+            $ref: '#/definitions/main.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: 유저 생성
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      parameters:
+      - description: 유저 ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          headers:
+            X-Response-Time-Ms:
+              description: 처리 시간(ms)
+              type: string
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: 유저 삭제
+      tags:
+      - users
+    get:
+      parameters:
+      - description: 유저 ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Response-Time-Ms:
+              description: 처리 시간(ms)
+              type: string
+          schema:
+            $ref: '#/definitions/main.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: 유저 단건 조회
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 유저 ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 유저 정보
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/main.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Response-Time-Ms:
+              description: 처리 시간(ms)
+              type: string
+          schema:
+            $ref: '#/definitions/main.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: 유저 수정
+      tags:
+      - users
+swagger: "2.0"
